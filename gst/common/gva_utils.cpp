@@ -5,6 +5,7 @@
  ******************************************************************************/
 
 #include "gva_utils.h"
+<<<<<<< HEAD
 #include <fstream>
 #include <sstream>
 #include <string>
@@ -33,6 +34,8 @@ std::vector<std::string> SplitString(const std::string &input, char delimiter) {
 bool file_exists(const std::string &path) {
     return std::ifstream(path).good();
 }
+=======
+>>>>>>> 1bdbbc8... Release 2020.4
 
 gboolean get_object_id(GstVideoRegionOfInterestMeta *meta, int *id) {
     GstStructure *object_id = gst_video_region_of_interest_meta_get_param(meta, "object_id");
@@ -42,4 +45,8 @@ gboolean get_object_id(GstVideoRegionOfInterestMeta *meta, int *id) {
 void set_object_id(GstVideoRegionOfInterestMeta *meta, gint id) {
     GstStructure *object_id = gst_structure_new("object_id", "id", G_TYPE_INT, id, NULL);
     gst_video_region_of_interest_meta_add_param(meta, object_id);
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 1bdbbc8... Release 2020.4

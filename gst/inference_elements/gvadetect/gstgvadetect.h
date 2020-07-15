@@ -1,5 +1,9 @@
 /*******************************************************************************
+<<<<<<< HEAD
  * Copyright (C) 2018-2019 Intel Corporation
+=======
+ * Copyright (C) 2018-2020 Intel Corporation
+>>>>>>> 1bdbbc8... Release 2020.4
  *
  * SPDX-License-Identifier: MIT
  ******************************************************************************/
@@ -7,6 +11,7 @@
 #ifndef _GST_GVA_DETECT_H_
 #define _GST_GVA_DETECT_H_
 
+<<<<<<< HEAD
 #include <gst/base/gstbasetransform.h>
 
 #include "gva_base_inference.h"
@@ -14,6 +19,11 @@
 #ifdef __cplusplus
 extern "C" {
 #endif /* __cplusplus */
+=======
+#include "gva_base_inference.h"
+
+#include <gst/base/gstbasetransform.h>
+>>>>>>> 1bdbbc8... Release 2020.4
 
 G_BEGIN_DECLS
 
@@ -36,8 +46,11 @@ GType gst_gva_detect_get_type(void);
 
 G_END_DECLS
 
+<<<<<<< HEAD
 #ifdef __cplusplus
 } // extern "C"
 #endif /* __cplusplus */
 
+=======
+>>>>>>> 1bdbbc8... Release 2020.4
 #endif

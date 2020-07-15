@@ -5,9 +5,15 @@
  ******************************************************************************/
 
 #include "model_loader.h"
+<<<<<<< HEAD
 
 #include "inference_backend/image_inference.h"
 #include "inference_backend/logger.h"
+=======
+#include "inference_backend/image_inference.h"
+#include "inference_backend/logger.h"
+#include "utils.h"
+>>>>>>> 1bdbbc8... Release 2020.4
 
 #include <fstream>
 
@@ -69,17 +75,24 @@ inline std::string fileNameNoExt(const std::string &filepath) {
     return filepath.substr(0, pos);
 }
 
+<<<<<<< HEAD
 bool file_exists(const std::string &path) {
     return std::ifstream(path).good();
 }
 
+=======
+>>>>>>> 1bdbbc8... Release 2020.4
 } // namespace
 
 bool ModelLoader::is_ir_model(const std::string &model_path) {
     bool is_ir = false;
     if (model_path.find(".xml") != std::string::npos) {
         const std::string model_bin = fileNameNoExt(model_path) + ".bin";
+<<<<<<< HEAD
         is_ir = file_exists(model_path) && file_exists(model_bin);
+=======
+        is_ir = Utils::fileExists(model_path) && Utils::fileExists(model_bin);
+>>>>>>> 1bdbbc8... Release 2020.4
     }
     return is_ir;
 }

@@ -17,8 +17,15 @@ if (NOT CMAKE_BUILD_TYPE)
     message(STATUS "CMAKE_BUILD_TYPE is undefined. Set default build type ${CMAKE_BUILD_TYPE}.")
 endif()
 
+<<<<<<< HEAD
 set(VERSION_MAJOR 1)
 set(VERSION_MINOR 0)
+=======
+option(TREAT_WARNING_AS_ERROR "Treat build warnings as errors" OFF)
+
+set(VERSION_MAJOR 1)
+set(VERSION_MINOR 1)
+>>>>>>> 1bdbbc8... Release 2020.4
 
 if (NOT DEFINED VERSION_PATCH OR "${VERSION_PATCH}" STREQUAL "")
     set(VERSION_PATCH 0)
@@ -79,7 +86,14 @@ find_package(Threads REQUIRED)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wuninitialized -Winit-self -Wmaybe-uninitialized -Warray-bounds -fstack-protector-strong -Wno-deprecated-declarations")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wuninitialized -Warray-bounds -fstack-protector-strong -Wno-deprecated-declarations")
 
+<<<<<<< HEAD
 
+=======
+if(TREAT_WARNING_AS_ERROR)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror")
+endif()
+>>>>>>> 1bdbbc8... Release 2020.4
 
 # Additional compilation flags aplied to specific targets
 set(C_FLAGS -Wall -Wextra)
@@ -102,21 +116,43 @@ if (${CMAKE_SYSTEM_PROCESSOR} STREQUAL "aarch64")
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -ftree-vectorize") # should be used with "-O2"
 endif()
 
+<<<<<<< HEAD
 
+=======
+if (ENABLE_CODE_COVERAGE)
+    include(${CMAKE_CURRENT_SOURCE_DIR}/CodeCoverage.cmake)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_COVERAGE}")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_COVERAGE}")
+    set(COVERAGE_GCOVR_EXCLUDES samples thirdparty tests)
+    set(COVERAGE_COMAND ${CMAKE_CURRENT_SOURCE_DIR}/scripts/code_coverage_command.sh)
+    set(COVERAGE_COMAND_ARGS ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_BINARY_DIR})
+    SETUP_TARGET_FOR_COVERAGE_GCOVR_HTML(NAME code_coverage EXECUTABLE ${COVERAGE_COMAND} ${COVERAGE_COMAND_ARGS})
+endif()
+>>>>>>> 1bdbbc8... Release 2020.4
 
 
 ###############################################################################
 if (${CMAKE_SYSTEM_PROCESSOR} STREQUAL "aarch64")
     option(ENABLE_ITT "Enable ITT for tracing" OFF)
+<<<<<<< HEAD
 else()
     option(ENABLE_ITT "Enable ITT for tracing" ON)
+=======
+    option(ENABLE_VAS_TRACKER "Enables vas tracker as part of gvatrack" OFF)
+else()
+    option(ENABLE_ITT "Enable ITT for tracing" ON)
+    option(ENABLE_VAS_TRACKER "Enables vas tracker as part of gvatrack" ON)
+>>>>>>> 1bdbbc8... Release 2020.4
 endif()
 
 option(HAVE_VAAPI "Parameter to enable VAAPI for image pre-processing" OFF)
 option(SUPPORT_DMA_BUFFER "Parameter to enable DMABuf in sink/source caps" OFF)
 option(ENABLE_PAHO_INSTALLATION "Enables paho-mqtt3c installation" OFF)
 option(ENABLE_RDKAFKA_INSTALLATION "Enables rdkafka installation" OFF)
+<<<<<<< HEAD
 option(ENABLE_VAS_TRACKER "Enables vas tracker as part of gvatrack" ON)
+=======
+>>>>>>> 1bdbbc8... Release 2020.4
 option(ENABLE_TRACKER_TYPE_IOU "Enables iou tracker type as part of gvatrack" OFF)
 option(USE_VPUSMM "Parameter to use VPUSMM" OFF)
 
@@ -142,8 +178,15 @@ add_subdirectory(gst)
 add_subdirectory(gst-libs)
 add_subdirectory(inference_backend)
 add_subdirectory(thirdparty)
+<<<<<<< HEAD
+=======
+add_subdirectory(utils)
+>>>>>>> 1bdbbc8... Release 2020.4
 
 if(NOT ${DISABLE_SAMPLES})
     add_subdirectory(samples)
 endif()
+<<<<<<< HEAD
 
+=======
+>>>>>>> 1bdbbc8... Release 2020.4

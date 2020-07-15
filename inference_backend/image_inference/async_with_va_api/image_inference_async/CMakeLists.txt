@@ -31,6 +31,10 @@ target_link_libraries(${TARGET_NAME}
 PRIVATE
         logger
         va_api_wrapper
+<<<<<<< HEAD
+=======
+        runtime_feature_toggling
+>>>>>>> 1bdbbc8... Release 2020.4
 )
 
 if(${ENABLE_ITT})

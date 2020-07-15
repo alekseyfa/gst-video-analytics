@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
     "input_preproc": [
         {
             "color_format": "BGR",
@@ -6,6 +7,15 @@
         }
     ],
     "json_schema_version": "1.0.0",
+=======
+    "json_schema_version": "2.0.0",
+    "input_preproc": [
+        {
+            "format": "image",
+            "layer_name": "data"
+        }
+    ],
+>>>>>>> 1bdbbc8... Release 2020.4
     "output_postproc": [
         {
             "converter": "tensor_to_label",

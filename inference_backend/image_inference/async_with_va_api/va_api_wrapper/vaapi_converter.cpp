@@ -23,7 +23,11 @@ uint32_t FourCc2RTFormat(int format_four_cc) {
     switch (format_four_cc) {
 #if VA_MAJOR_VERSION >= 1
     case VA_FOURCC_I420:
+<<<<<<< HEAD
         return VA_FOURCC_I420;
+=======
+        return VA_RT_FORMAT_YUV420;
+>>>>>>> 1bdbbc8... Release 2020.4
 #endif
     case VA_FOURCC_NV12:
         return VA_RT_FORMAT_YUV420;

@@ -1,6 +1,10 @@
 # gvapython Sample
 
+<<<<<<< HEAD
 This sample demonstrates [gvapython](./gvapython.md) element and ability to customize pipeline with application provided python script for pre- or post-processing of inference operations. It typically used for interpretation of inference results and various application logic, especially if required in the middle of GStreamer pipeline.
+=======
+This sample demonstrates [gvapython](https://github.com/opencv/gst-video-analytics/wiki/gvapython) element and ability to customize pipeline with application provided Python script for pre- or post-processing of inference operations. It typically used for interpretation of inference results and various application logic, especially if required in the middle of GStreamer pipeline.
+>>>>>>> 1bdbbc8... Release 2020.4
 
 ## How It Works
  In this sample the `gvapython` element inserted into pipeline twice.

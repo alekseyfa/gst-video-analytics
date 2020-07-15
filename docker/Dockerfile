@@ -193,7 +193,11 @@ RUN tar xvf build/src/gst-plugins-base-${GST_VERSION}.tar.xz && \
         -Dgtk_doc=disabled \
         -Dnls=disabled \
         -Dgl=disabled \
+<<<<<<< HEAD
         -Dpackage_origin="${PACKAGE_ORIGIN}" \
+=======
+        -Dpackage-origin="${PACKAGE_ORIGIN}" \
+>>>>>>> 1bdbbc8... Release 2020.4
         --buildtype=${BUILD_TYPE} \
         --prefix=${PREFIX} \
         --libdir=${LIBDIR} \
@@ -244,7 +248,11 @@ RUN tar xvf build/src/gst-plugins-good-${GST_VERSION}.tar.xz && \
         -Dtests=disabled \
         -Dgtk_doc=disabled \
         -Dnls=disabled \
+<<<<<<< HEAD
         -Dpackage_origin="${PACKAGE_ORIGIN}" \
+=======
+        -Dpackage-origin="${PACKAGE_ORIGIN}" \
+>>>>>>> 1bdbbc8... Release 2020.4
         --buildtype=${BUILD_TYPE} \
         --prefix=${PREFIX} \
         --libdir=${LIBDIR} \
@@ -327,7 +335,11 @@ RUN tar xvf build/src/gst-plugins-bad-${GST_VERSION}.tar.xz && \
         -Dofa=disabled \
         -Dfaad=disabled \
         -Dmpeg2enc=disabled \
+<<<<<<< HEAD
         -Dpackage_origin="${PACKAGE_ORIGIN}" \
+=======
+        -Dpackage-origin="${PACKAGE_ORIGIN}" \
+>>>>>>> 1bdbbc8... Release 2020.4
         --buildtype=${BUILD_TYPE} \
         --prefix=${PREFIX} \
         --libdir=${LIBDIR} \
@@ -362,7 +374,11 @@ RUN tar xvf build/src/gst-plugins-ugly-${GST_VERSION}.tar.xz && \
         -Ddvdread=disabled \
         -Da52dec=disabled \
         -Dx264=disabled \
+<<<<<<< HEAD
         -Dpackage_origin="${PACKAGE_ORIGIN}" \
+=======
+        -Dpackage-origin="${PACKAGE_ORIGIN}" \
+>>>>>>> 1bdbbc8... Release 2020.4
         --buildtype=${BUILD_TYPE} \
         --prefix=${PREFIX} \
         --libdir=${LIBDIR} \
@@ -416,7 +432,11 @@ RUN tar xvf build/src/gst-libav-${GST_VERSION}.tar.xz && \
         -Dtests=disabled \
         -Dgtk_doc=disabled \
         -Dnls=disabled \
+<<<<<<< HEAD
         -Dpackage_origin="${PACKAGE_ORIGIN}" \
+=======
+        -Dpackage-origin="${PACKAGE_ORIGIN}" \
+>>>>>>> 1bdbbc8... Release 2020.4
         --buildtype=${BUILD_TYPE} \
         --prefix=${PREFIX} \
         --libdir=${LIBDIR} \
@@ -454,7 +474,11 @@ RUN tar xvf build/src/gstreamer-vaapi-${GST_VERSION}.tar.xz && \
         -Dtests=disabled \
         -Dgtk_doc=disabled \
         -Dnls=disabled \
+<<<<<<< HEAD
         -Dpackage_origin="${PACKAGE_ORIGIN}" \
+=======
+        -Dpackage-origin="${PACKAGE_ORIGIN}" \
+>>>>>>> 1bdbbc8... Release 2020.4
         --buildtype=${BUILD_TYPE} \
         --prefix=${PREFIX} \
         --libdir=${LIBDIR} \

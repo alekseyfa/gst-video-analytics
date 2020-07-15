@@ -36,5 +36,9 @@ target_link_libraries(${TARGET_NAME}
 PUBLIC
         IE::inference_engine
         IE::inference_engine_legacy
+<<<<<<< HEAD
+=======
+        utils
+>>>>>>> 1bdbbc8... Release 2020.4
         logger
 )

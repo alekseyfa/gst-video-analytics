@@ -8,6 +8,7 @@
 
 #include "config.h"
 
+<<<<<<< HEAD
 #include "gst_allocator_wrapper.h"
 #include "gva_buffer_map.h"
 #include "gva_utils.h"
@@ -22,6 +23,27 @@
 #include <cstring>
 #include <exception>
 #include <gst/allocators/allocators.h>
+=======
+#include "common/pre_processors.h"
+#include "environment_variable_options_reader.h"
+#include "feature_toggling/ifeature_toggle.h"
+#include "gst_allocator_wrapper.h"
+#include "gva_buffer_map.h"
+#include "gva_utils.h"
+#include "inference_backend/logger.h"
+#include "inference_backend/safe_arithmetic.h"
+#include "logger_functions.h"
+#include "model_proc/model_proc_provider.h"
+#include "runtime_feature_toggler.h"
+#include "utils.h"
+#include "video_frame.h"
+
+#include <gst/allocators/allocators.h>
+
+#include <assert.h>
+#include <cstring>
+#include <exception>
+>>>>>>> 1bdbbc8... Release 2020.4
 #include <map>
 #include <memory>
 #include <sstream>
@@ -34,6 +56,14 @@ using namespace InferenceBackend;
 
 namespace {
 
+<<<<<<< HEAD
+=======
+CREATE_FEATURE_TOGGLE(CompactMetaToggle, "compact-meta",
+                      "GVA Tensor storing full list of class labels is deprecated. User application must not expect "
+                      "Tensor to contain labels. Please set environment variable ENABLE_GVA_FEATURES=compact-meta to "
+                      "disable deprecated functionality and this message will be gone")
+
+>>>>>>> 1bdbbc8... Release 2020.4
 inline std::map<std::string, std::string> StringToMap(std::string const &s, char records_delimiter = ',',
                                                       char key_val_delimiter = '=') {
     std::string key, val;
@@ -126,7 +156,10 @@ CreateNestedConfig(const GvaBaseInference *gva_base_inference) {
     }
     base[KEY_IMAGE_FORMAT] =
         GstVideoFormatToString(static_cast<GstVideoFormat>(gva_base_inference->info->finfo->format));
+<<<<<<< HEAD
 
+=======
+>>>>>>> 1bdbbc8... Release 2020.4
     base[KEY_RESHAPE] = std::to_string(gva_base_inference->reshape);
     base[KEY_BATCH_SIZE] = std::to_string(gva_base_inference->batch_size);
     if (gva_base_inference->reshape) {
@@ -148,6 +181,30 @@ CreateNestedConfig(const GvaBaseInference *gva_base_inference) {
     return config;
 }
 
+<<<<<<< HEAD
+=======
+void UpdateConfigWithLayerInfo(const std::vector<ModelInputProcessorInfo::Ptr> &model_input_processor_info,
+                               const std::map<std::string, GstStructure *> &model_output_processor_info,
+                               std::map<std::string, std::map<std::string, std::string>> &config) {
+    std::map<std::string, std::string> layer_precision;
+    std::map<std::string, std::string> format;
+    for (const ModelInputProcessorInfo::Ptr &preproc : model_input_processor_info) {
+        layer_precision[preproc->layer_name] = (preproc->format == KEY_image)
+                                                   ? std::to_string(static_cast<int>(Blob::Precision::U8))
+                                                   : std::to_string(static_cast<int>(Blob::Precision::FP32));
+        format[preproc->layer_name] = preproc->format;
+    }
+
+    for (const auto &postproc : model_output_processor_info) {
+        std::string layer_name = postproc.first;
+        layer_precision[layer_name] = std::to_string(static_cast<int>(Blob::Precision::FP32));
+    }
+
+    config[KEY_LAYER_PRECISION] = layer_precision;
+    config[KEY_FORMAT] = format;
+}
+
+>>>>>>> 1bdbbc8... Release 2020.4
 void ApplyImageBoundaries(std::shared_ptr<InferenceBackend::Image> &image, const GstVideoRegionOfInterestMeta *meta) {
     // TODO: this is also implemented in VideoFrame::clip_normalized_rect, get rid of duplicate
     // workaround for cases when tinyyolov2 output blob parsing result coordinates are out of image
@@ -183,13 +240,28 @@ std::shared_ptr<InferenceBackend::Image> CreateImage(GstBuffer *buffer, GstVideo
     }
 }
 
+<<<<<<< HEAD
+=======
+void UpdateClassificationHistory(GstVideoRegionOfInterestMeta *meta, GvaBaseInference *gva_base_inference,
+                                 const GstStructure *classification_result) {
+    GstGvaClassify *gvaclassify = (GstGvaClassify *)gva_base_inference;
+    gint meta_id = 0;
+    get_object_id(meta, &meta_id);
+    if (gvaclassify->reclassify_interval != 1 and meta_id > 0)
+        gvaclassify->classification_history->UpdateROIParams(meta_id, classification_result);
+}
+>>>>>>> 1bdbbc8... Release 2020.4
 } // namespace
 
 InferenceImpl::Model InferenceImpl::CreateModel(GvaBaseInference *gva_base_inference,
                                                 std::shared_ptr<Allocator> &allocator, const std::string &model_file,
                                                 const std::string &model_proc_path) {
 
+<<<<<<< HEAD
     if (not file_exists(model_file))
+=======
+    if (not Utils::fileExists(model_file))
+>>>>>>> 1bdbbc8... Release 2020.4
         throw std::invalid_argument("Model file '" + model_file + "' does not exist");
 
     GST_WARNING_OBJECT(gva_base_inference, "Loading model: device=%s, path=%s", gva_base_inference->device,
@@ -199,6 +271,7 @@ InferenceImpl::Model InferenceImpl::CreateModel(GvaBaseInference *gva_base_infer
     set_log_function(GST_logger);
     std::map<std::string, std::map<std::string, std::string>> ie_config = CreateNestedConfig(gva_base_inference);
 
+<<<<<<< HEAD
     auto infer = ImageInference::make_shared(MemoryType::ANY, model_file, ie_config, allocator.get(),
                                              std::bind(&InferenceImpl::InferenceCompletionCallback, this, _1, _2));
     if (not infer.get())
@@ -217,12 +290,43 @@ InferenceImpl::Model InferenceImpl::CreateModel(GvaBaseInference *gva_base_infer
             break;
         }
     }
+=======
+    Model model;
+    if (!model_proc_path.empty()) {
+        ModelProcProvider model_proc_provider;
+        model_proc_provider.readJsonFile(model_proc_path);
+        model.input_processor_info = model_proc_provider.parseInputPreproc();
+        model.output_processor_info = model_proc_provider.parseOutputPostproc();
+        // TODO: move code below into model_proc_provider
+        for (auto proc : model.output_processor_info) {
+            GValueArray *labels = nullptr;
+            gst_structure_get_array(proc.second, "labels", &labels);
+            if (feature_toggler->enabled(CompactMetaToggle::id)) {
+                gst_structure_remove_field(proc.second, "labels");
+            } else {
+                GVA_WARNING(CompactMetaToggle::deprecation_message.c_str());
+            }
+            model.labels[proc.first] = labels;
+        }
+    }
+    UpdateConfigWithLayerInfo(model.input_processor_info, model.output_processor_info, ie_config);
+    auto image_inference =
+        ImageInference::make_shared(MemoryType::ANY, model_file, ie_config, allocator.get(),
+                                    std::bind(&InferenceImpl::InferenceCompletionCallback, this, _1, _2),
+                                    std::bind(&InferenceImpl::PushFramesIfInferenceFailed, this, _1));
+    if (not image_inference)
+        throw std::runtime_error("Failed to create inference instance");
+    model.inference = image_inference;
+    model.name = image_inference->GetModelName();
+
+>>>>>>> 1bdbbc8... Release 2020.4
     return model;
 }
 
 InferenceImpl::InferenceImpl(GvaBaseInference *gva_base_inference) : frame_num(0) {
     assert(gva_base_inference != nullptr);
 
+<<<<<<< HEAD
     if (!gva_base_inference->model) {
         throw std::runtime_error("Model not specified");
     }
@@ -230,6 +334,20 @@ InferenceImpl::InferenceImpl(GvaBaseInference *gva_base_inference) : frame_num(0
     std::vector<std::string> model_procs;
     if (gva_base_inference->model_proc) {
         model_procs = SplitString(gva_base_inference->model_proc);
+=======
+    feature_toggler = std::unique_ptr<FeatureToggling::Runtime::RuntimeFeatureToggler>(
+        new FeatureToggling::Runtime::RuntimeFeatureToggler());
+    FeatureToggling::Runtime::EnvironmentVariableOptionsReader env_var_options_reader;
+    feature_toggler->configure(env_var_options_reader.read("ENABLE_GVA_FEATURES"));
+
+    if (!gva_base_inference->model) {
+        throw std::runtime_error("Model not specified");
+    }
+    std::vector<std::string> model_files = Utils::splitString(gva_base_inference->model);
+    std::vector<std::string> model_procs;
+    if (gva_base_inference->model_proc) {
+        model_procs = Utils::splitString(gva_base_inference->model_proc);
+>>>>>>> 1bdbbc8... Release 2020.4
     }
 
     allocator = CreateAllocator(gva_base_inference->allocator_name);
@@ -249,8 +367,16 @@ void InferenceImpl::FlushInference() {
 
 InferenceImpl::~InferenceImpl() {
     for (Model &model : models) {
+<<<<<<< HEAD
         for (auto proc : model.proc) {
             gst_structure_free(proc.second);
+=======
+        for (auto proc : model.output_processor_info)
+            gst_structure_free(proc.second);
+        for (auto labels : model.labels) {
+            if (labels.second)
+                g_value_array_free(labels.second);
+>>>>>>> 1bdbbc8... Release 2020.4
         }
     }
     models.clear();
@@ -264,6 +390,7 @@ void InferenceImpl::PushOutput() {
         if (front.inference_count != 0) {
             break; // inference not completed yet
         }
+<<<<<<< HEAD
         GstBuffer *buffer = front.writable_buffer ? front.writable_buffer : front.buffer;
 
         if (!check_gva_base_inference_stopped(front.filter)) {
@@ -273,10 +400,35 @@ void InferenceImpl::PushOutput() {
                 GVA_WARNING(err.c_str());
             }
         }
+=======
+
+        for (const std::shared_ptr<InferenceFrame> inference_roi : front.inference_rois) {
+            for (const GstStructure *roi_classification : inference_roi->roi_classifications) {
+                UpdateClassificationHistory(&inference_roi->roi, front.filter, roi_classification);
+            }
+        }
+
+        PushBufferToSrcPad(front);
+>>>>>>> 1bdbbc8... Release 2020.4
         output_frames.pop_front();
     }
 }
 
+<<<<<<< HEAD
+=======
+void InferenceImpl::PushBufferToSrcPad(OutputFrame &output_frame) {
+    GstBuffer *buffer = output_frame.writable_buffer ? output_frame.writable_buffer : output_frame.buffer;
+
+    if (!check_gva_base_inference_stopped(output_frame.filter)) {
+        GstFlowReturn ret = gst_pad_push(GST_BASE_TRANSFORM_SRC_PAD(output_frame.filter), buffer);
+        if (ret != GST_FLOW_OK) {
+            std::string err = "Inference gst_pad_push returned status " + std::to_string(ret);
+            GVA_WARNING(err.c_str());
+        }
+    }
+}
+
+>>>>>>> 1bdbbc8... Release 2020.4
 std::shared_ptr<InferenceImpl::InferenceResult>
 InferenceImpl::MakeInferenceResult(GvaBaseInference *gva_base_inference, Model &model,
                                    GstVideoRegionOfInterestMeta *meta, std::shared_ptr<InferenceBackend::Image> &image,
@@ -284,17 +436,30 @@ InferenceImpl::MakeInferenceResult(GvaBaseInference *gva_base_inference, Model &
     auto result = std::make_shared<InferenceResult>();
     assert(result.get() != nullptr); // expect that std::make_shared must throw instead of returning nullptr
 
+<<<<<<< HEAD
     result->inference_frame.buffer = buffer;
     result->inference_frame.roi = *meta;
     result->inference_frame.gva_base_inference = gva_base_inference;
     if (gva_base_inference->info)
         result->inference_frame.info = gst_video_info_copy(gva_base_inference->info);
+=======
+    result->inference_frame = std::make_shared<InferenceFrame>();
+    assert(result->inference_frame.get() !=
+           nullptr); // expect that std::make_shared must throw instead of returning nullptr
+
+    result->inference_frame->buffer = buffer;
+    result->inference_frame->roi = *meta;
+    result->inference_frame->gva_base_inference = gva_base_inference;
+    if (gva_base_inference->info)
+        result->inference_frame->info = gst_video_info_copy(gva_base_inference->info);
+>>>>>>> 1bdbbc8... Release 2020.4
 
     result->model = &model;
     result->image = image;
     return result;
 }
 
+<<<<<<< HEAD
 RoiPreProcessorFunction InferenceImpl::GetPreProcFunction(GvaBaseInference *gva_base_inference,
                                                           GstStructure *input_preproc,
                                                           GstVideoRegionOfInterestMeta *meta) {
@@ -311,6 +476,8 @@ RoiPreProcessorFunction InferenceImpl::GetPreProcFunction(GvaBaseInference *gva_
     return pre_proc;
 }
 
+=======
+>>>>>>> 1bdbbc8... Release 2020.4
 GstFlowReturn InferenceImpl::SubmitImages(GvaBaseInference *gva_base_inference,
                                           const std::vector<GstVideoRegionOfInterestMeta *> &metas, GstVideoInfo *info,
                                           GstBuffer *buffer) {
@@ -330,12 +497,24 @@ GstFlowReturn InferenceImpl::SubmitImages(GvaBaseInference *gva_base_inference,
         }
         std::shared_ptr<InferenceBackend::Image> image = CreateImage(buffer, info, mem_type, GST_MAP_READ);
 
+<<<<<<< HEAD
         for (Model &model : models) {
             for (const auto meta : metas) {
                 ApplyImageBoundaries(image, meta);
                 auto result = MakeInferenceResult(gva_base_inference, model, meta, image, buffer);
                 RoiPreProcessorFunction pre_proc = GetPreProcFunction(gva_base_inference, model.input_preproc, meta);
                 model.inference->SubmitImage(*image, result, pre_proc);
+=======
+        for (InferenceImpl::Model &model : models) {
+            for (const auto meta : metas) {
+                ApplyImageBoundaries(image, meta);
+                auto result = MakeInferenceResult(gva_base_inference, model, meta, image, buffer);
+                std::map<std::string, InferenceBackend::InputLayerDesc::Ptr> input_preprocessors;
+                if (not model.input_processor_info.empty() and gva_base_inference->input_prerocessors_factory)
+                    input_preprocessors = gva_base_inference->input_prerocessors_factory(
+                        model.inference, model.input_processor_info, meta);
+                model.inference->SubmitImage(*image, result, input_preprocessors);
+>>>>>>> 1bdbbc8... Release 2020.4
             }
         }
     } catch (const std::exception &e) {
@@ -418,7 +597,12 @@ GstFlowReturn InferenceImpl::TransformFrameIp(GvaBaseInference *gva_base_inferen
         InferenceImpl::OutputFrame output_frame = {.buffer = buffer,
                                                    .writable_buffer = NULL,
                                                    .inference_count = inference_count,
+<<<<<<< HEAD
                                                    .filter = gva_base_inference};
+=======
+                                                   .filter = gva_base_inference,
+                                                   .inference_rois = {}};
+>>>>>>> 1bdbbc8... Release 2020.4
         output_frames.push_back(output_frame);
 
         if (!inference_count) {
@@ -437,6 +621,25 @@ void InferenceImpl::SinkEvent(GstEvent *event) {
     }
 }
 
+<<<<<<< HEAD
+=======
+void InferenceImpl::PushFramesIfInferenceFailed(
+    std::vector<std::shared_ptr<InferenceBackend::ImageInference::IFrameBase>> frames) {
+    for (auto &frame : frames) {
+        auto inference_result = std::dynamic_pointer_cast<InferenceResult>(frame);
+        assert(inference_result.get() != nullptr); // InferenceResult is inherited from IFrameBase
+
+        std::shared_ptr<InferenceFrame> inference_roi = inference_result->inference_frame;
+        auto it =
+            std::find_if(output_frames.begin(), output_frames.end(), [inference_roi](const OutputFrame &output_frame) {
+                return output_frame.buffer == inference_roi->buffer;
+            });
+        PushBufferToSrcPad(*it);
+        output_frames.erase(it);
+    }
+}
+
+>>>>>>> 1bdbbc8... Release 2020.4
 void InferenceImpl::InferenceCompletionCallback(
     std::map<std::string, InferenceBackend::OutputBlob::Ptr> blobs,
     std::vector<std::shared_ptr<InferenceBackend::ImageInference::IFrameBase>> frames) {
@@ -445,26 +648,44 @@ void InferenceImpl::InferenceCompletionCallback(
     if (frames.empty())
         return;
 
+<<<<<<< HEAD
     std::vector<InferenceFrame> inference_frames;
     Model *model = nullptr;
     PostProcFunction post_proc = nullptr;
+=======
+    std::vector<std::shared_ptr<InferenceFrame>> inference_frames;
+    PostProcessor *post_proc = nullptr;
+>>>>>>> 1bdbbc8... Release 2020.4
 
     for (auto &frame : frames) {
         auto inference_result = std::dynamic_pointer_cast<InferenceResult>(frame);
         assert(inference_result.get() != nullptr); // InferenceResult is inherited from IFrameBase
 
+<<<<<<< HEAD
         model = inference_result->model;
         InferenceFrame inference_roi = inference_result->inference_frame;
+=======
+        std::shared_ptr<InferenceFrame> inference_roi = inference_result->inference_frame;
+>>>>>>> 1bdbbc8... Release 2020.4
         inference_result->image = nullptr; // if image_deleter set, call image_deleter including gst_buffer_unref
                                            // before gst_buffer_make_writable
 
         if (post_proc == nullptr)
+<<<<<<< HEAD
             post_proc = inference_roi.gva_base_inference->post_proc;
         else
             assert(post_proc == inference_roi.gva_base_inference->post_proc);
 
         for (auto &output_frame : output_frames) {
             if (output_frame.buffer == inference_roi.buffer) {
+=======
+            post_proc = inference_roi->gva_base_inference->post_proc;
+        else
+            assert(post_proc == inference_roi->gva_base_inference->post_proc);
+
+        for (auto &output_frame : output_frames) {
+            if (output_frame.buffer == inference_roi->buffer) {
+>>>>>>> 1bdbbc8... Release 2020.4
                 if (output_frame.filter->is_full_frame) { // except gvaclassify because it doesn't attach new metadata
                     if (output_frame.inference_count == 0)
                         // This condition is necessary if two items in output_frames refer to the same buffer.
@@ -475,6 +696,7 @@ void InferenceImpl::InferenceCompletionCallback(
                     if (output_frame.writable_buffer) {
                         // check if we have writable version of this buffer (this function called multiple times
                         // on same buffer)
+<<<<<<< HEAD
                         inference_roi.buffer = output_frame.writable_buffer;
                     } else {
                         if (!gst_buffer_is_writable(inference_roi.buffer)) {
@@ -484,6 +706,18 @@ void InferenceImpl::InferenceCompletionCallback(
                         output_frame.writable_buffer = inference_roi.buffer;
                     }
                 }
+=======
+                        inference_roi->buffer = output_frame.writable_buffer;
+                    } else {
+                        if (!gst_buffer_is_writable(inference_roi->buffer)) {
+                            GST_WARNING_OBJECT(output_frame.filter, "Making a writable buffer requires buffer copy");
+                            inference_roi->buffer = gst_buffer_make_writable(inference_roi->buffer);
+                        }
+                        output_frame.writable_buffer = inference_roi->buffer;
+                    }
+                }
+                output_frame.inference_rois.push_back(inference_roi);
+>>>>>>> 1bdbbc8... Release 2020.4
                 --output_frame.inference_count;
                 break;
             }
@@ -492,7 +726,11 @@ void InferenceImpl::InferenceCompletionCallback(
     }
 
     if (post_proc != nullptr) {
+<<<<<<< HEAD
         post_proc(blobs, inference_frames, model->proc, model ? model->name.c_str() : nullptr);
+=======
+        post_proc->process(blobs, inference_frames);
+>>>>>>> 1bdbbc8... Release 2020.4
     }
 
     PushOutput();

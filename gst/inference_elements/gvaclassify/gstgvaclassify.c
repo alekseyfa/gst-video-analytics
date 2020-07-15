@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: MIT
  ******************************************************************************/
 
+<<<<<<< HEAD
 #include <gst/base/gstbasetransform.h>
 #include <gst/gst.h>
 #include <gst/video/video.h>
@@ -15,6 +16,21 @@
 #include "gva_caps.h"
 #include "post_processors.h"
 #include "pre_processors.h"
+=======
+#include "gstgvaclassify.h"
+
+#include "classification_history.h"
+#include "classification_post_processors_c.h"
+#include "pre_processors.h"
+
+#include "config.h"
+
+#include "gva_caps.h"
+
+#include <gst/base/gstbasetransform.h>
+#include <gst/gst.h>
+#include <gst/video/video.h>
+>>>>>>> 1bdbbc8... Release 2020.4
 
 #define ELEMENT_LONG_NAME "Object classification (requires GstVideoRegionOfInterestMeta on input)"
 #define ELEMENT_DESCRIPTION ELEMENT_LONG_NAME
@@ -42,6 +58,10 @@ G_DEFINE_TYPE_WITH_CODE(GstGvaClassify, gst_gva_classify, GST_TYPE_GVA_BASE_INFE
 static GstPadProbeReturn FillROIParamsCallback(GstPad *pad, GstPadProbeInfo *info, gpointer user_data);
 static void gst_gva_classify_finalize(GObject *);
 static void gst_gva_classify_cleanup(GstGvaClassify *);
+<<<<<<< HEAD
+=======
+static void on_base_inference_initialized(GvaBaseInference *base_inference);
+>>>>>>> 1bdbbc8... Release 2020.4
 
 void gst_gva_classify_set_property(GObject *object, guint property_id, const GValue *value, GParamSpec *pspec) {
     GstGvaClassify *gvaclassify = (GstGvaClassify *)(object);
@@ -113,6 +133,12 @@ void gst_gva_classify_class_init(GstGvaClassifyClass *gvaclassify_class) {
     gobject_class->get_property = gst_gva_classify_get_property;
     gobject_class->finalize = gst_gva_classify_finalize;
 
+<<<<<<< HEAD
+=======
+    GvaBaseInferenceClass *base_inference_class = GVA_BASE_INFERENCE_CLASS(gvaclassify_class);
+    base_inference_class->on_initialized = on_base_inference_initialized;
+
+>>>>>>> 1bdbbc8... Release 2020.4
     g_object_class_install_property(
         gobject_class, PROP_OBJECT_CLASS,
         g_param_spec_string("object-class", "ObjectClass",
@@ -149,8 +175,11 @@ void gst_gva_classify_init(GstGvaClassify *gvaclassify) {
     if (gvaclassify->classification_history == NULL)
         return;
 
+<<<<<<< HEAD
     gvaclassify->base_inference.get_roi_pre_proc = INPUT_PRE_PROCESS;
     gvaclassify->base_inference.post_proc = EXTRACT_CLASSIFICATION_RESULTS;
+=======
+>>>>>>> 1bdbbc8... Release 2020.4
     gvaclassify->base_inference.is_roi_classification_needed = IS_ROI_CLASSIFICATION_NEEDED;
 }
 
@@ -167,6 +196,12 @@ void gst_gva_classify_cleanup(GstGvaClassify *gvaclassify) {
 
     g_free(gvaclassify->object_class);
     gvaclassify->object_class = NULL;
+<<<<<<< HEAD
+=======
+
+    releaseClassificationPostProcessor(gvaclassify->base_inference.post_proc);
+    gvaclassify->base_inference.post_proc = NULL;
+>>>>>>> 1bdbbc8... Release 2020.4
 }
 
 void gst_gva_classify_finalize(GObject *object) {
@@ -187,3 +222,14 @@ GstPadProbeReturn FillROIParamsCallback(GstPad *pad, GstPadProbeInfo *info, gpoi
 
     return GST_PAD_PROBE_OK;
 }
+<<<<<<< HEAD
+=======
+
+void on_base_inference_initialized(GvaBaseInference *base_inference) {
+    GstGvaClassify *gvaclassify = GST_GVA_CLASSIFY(base_inference);
+
+    GST_DEBUG_OBJECT(gvaclassify, "on_base_inference_initialized");
+
+    base_inference->post_proc = createClassificationPostProcessor(base_inference->inference);
+}
+>>>>>>> 1bdbbc8... Release 2020.4

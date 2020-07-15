@@ -6,8 +6,13 @@
 
 #include "fpscounter.h"
 #include "config.h"
+<<<<<<< HEAD
 #include "gva_utils.h"
 #include "inference_backend/logger.h"
+=======
+#include "inference_backend/logger.h"
+#include "utils.h"
+>>>>>>> 1bdbbc8... Release 2020.4
 
 #include <assert.h>
 #include <chrono>
@@ -83,6 +88,10 @@ class IterativeFpsCounter : public FpsCounter {
             fprintf(output, ")");
         }
         fprintf(output, "\n");
+<<<<<<< HEAD
+=======
+        fflush(output);
+>>>>>>> 1bdbbc8... Release 2020.4
     }
 };
 
@@ -151,7 +160,11 @@ extern "C" {
 void create_iterative_fps_counter(const char *intervals) {
     try {
         std::lock_guard<std::mutex> lock(channels_mutex);
+<<<<<<< HEAD
         std::vector<std::string> intervals_list = SplitString(intervals, ',');
+=======
+        std::vector<std::string> intervals_list = Utils::splitString(intervals, ',');
+>>>>>>> 1bdbbc8... Release 2020.4
         for (const std::string &interval : intervals_list)
             if (not fps_counters.count(interval)) {
                 std::shared_ptr<FpsCounter> fps_counter =
@@ -194,4 +207,8 @@ void fps_counter_eos() {
     }
 }
 
+<<<<<<< HEAD
 } /* extern "C" */
+=======
+} /* extern "C" */
+>>>>>>> 1bdbbc8... Release 2020.4

@@ -11,9 +11,15 @@
 #include "classification_history.h"
 #include "gstgvaclassify.h"
 #include "gva_base_inference.h"
+<<<<<<< HEAD
 #include "gva_utils.h"
 #include "inference_backend/safe_arithmetic.h"
 #include "region_of_interest.h"
+=======
+#include "inference_backend/safe_arithmetic.h"
+#include "region_of_interest.h"
+#include "utils.h"
+>>>>>>> 1bdbbc8... Release 2020.4
 
 #include <inference_backend/image_inference.h>
 #include <opencv2/imgproc.hpp>
@@ -24,6 +30,7 @@ namespace {
 
 using namespace InferenceBackend;
 
+<<<<<<< HEAD
 cv::Mat GetTransform(cv::Mat *src, cv::Mat *dst) {
     if (not src or not dst)
         throw std::invalid_argument("Invalid cv::Mat inputs for GetTransform");
@@ -76,6 +83,8 @@ void align_rgb_image(Image &image, const std::vector<float> &landmarks_points,
     }
 }
 
+=======
+>>>>>>> 1bdbbc8... Release 2020.4
 bool IsROIClassificationNeeded(GvaBaseInference *gva_base_inference, guint current_num_frame, GstBuffer * /* *buffer*/,
                                GstVideoRegionOfInterestMeta *roi) {
     GstGvaClassify *gva_classify = (GstGvaClassify *)gva_base_inference;
@@ -86,7 +95,11 @@ bool IsROIClassificationNeeded(GvaBaseInference *gva_base_inference, guint curre
         auto it = elemets_object_classes.find(gva_base_inference->model_instance_id);
         if (it == elemets_object_classes.end())
             it = elemets_object_classes.insert(
+<<<<<<< HEAD
                 it, {gva_base_inference->model_instance_id, SplitString(gva_classify->object_class, ',')});
+=======
+                it, {gva_base_inference->model_instance_id, Utils::splitString(gva_classify->object_class, ',')});
+>>>>>>> 1bdbbc8... Release 2020.4
 
         auto compare_quark_string = [roi](const std::string &str) {
             const gchar *roi_type = roi->roi_type ? g_quark_to_string(roi->roi_type) : "";
@@ -99,6 +112,7 @@ bool IsROIClassificationNeeded(GvaBaseInference *gva_base_inference, guint curre
 
     // Check is object recently classified
     assert(gva_classify->classification_history != NULL);
+<<<<<<< HEAD
     return (gva_classify->classification_history->IsROIClassificationNeeded(roi, current_num_frame));
 }
 
@@ -138,9 +152,16 @@ RoiPreProcessorFunction InputPreProcess(GstStructure *preproc, GstVideoRegionOfI
     }
 
     return [](Image &) {};
+=======
+    return (gva_classify->reclassify_interval == 1 ||
+            gva_classify->classification_history->IsROIClassificationNeeded(roi, current_num_frame));
+>>>>>>> 1bdbbc8... Release 2020.4
 }
 
 } // anonymous namespace
 
+<<<<<<< HEAD
 GetROIPreProcFunction INPUT_PRE_PROCESS = InputPreProcess;
+=======
+>>>>>>> 1bdbbc8... Release 2020.4
 IsROIClassificationNeededFunction IS_ROI_CLASSIFICATION_NEEDED = IsROIClassificationNeeded;

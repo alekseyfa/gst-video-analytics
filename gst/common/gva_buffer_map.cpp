@@ -48,6 +48,7 @@ inline int gstFormatToFourCC(int format) {
 }
 
 #ifdef USE_VPUSMM
+<<<<<<< HEAD
 int gva_dmabuffer_import(GstBuffer *buffer) {
     int fd = 0;
     auto mem = GstMemoryUniquePtr(gst_buffer_get_memory(buffer, 0), gst_memory_unref);
@@ -59,6 +60,12 @@ int gva_dmabuffer_import(GstBuffer *buffer) {
             throw std::runtime_error("GstBuffer memory is not DMA buffer");
 
         int fd = gst_dmabuf_memory_get_fd(mem.get());
+=======
+int gva_dmabuffer_import(GstMemory *mem) {
+    int fd = 0;
+    try {
+        fd = gst_dmabuf_memory_get_fd(mem);
+>>>>>>> 1bdbbc8... Release 2020.4
         if (fd <= 0)
             throw std::runtime_error("Failed to get file desc associated with GstBuffer memory");
 
@@ -71,6 +78,7 @@ int gva_dmabuffer_import(GstBuffer *buffer) {
     return fd;
 }
 
+<<<<<<< HEAD
 void gva_dmabuffer_unimport(GstBuffer *buffer) {
     auto mem = GstMemoryUniquePtr(gst_buffer_get_memory(buffer, 0), gst_memory_unref);
     try {
@@ -81,6 +89,12 @@ void gva_dmabuffer_unimport(GstBuffer *buffer) {
             throw std::runtime_error("GstBuffer memory is not DMA buffer");
 
         int fd = gst_dmabuf_memory_get_fd(mem.get());
+=======
+void gva_dmabuffer_unimport(GstMemory *mem) {
+    int fd = 0;
+    try {
+        fd = gst_dmabuf_memory_get_fd(mem);
+>>>>>>> 1bdbbc8... Release 2020.4
         if (fd <= 0)
             throw std::runtime_error("Failed to get file desc associated with GstBuffer memory");
 
@@ -124,7 +138,15 @@ void gva_buffer_map(GstBuffer *buffer, Image &image, BufferMapContext &map_conte
                 image.stride[i] = GST_VIDEO_FRAME_PLANE_STRIDE(&map_context.frame, i);
             }
 #ifdef USE_VPUSMM
+<<<<<<< HEAD
             gva_dmabuffer_import(buffer);
+=======
+            auto mem = GstMemoryUniquePtr(gst_buffer_get_memory(buffer, 0), gst_memory_unref);
+            if (not mem.get())
+                throw std::runtime_error("Failed to get GstBuffer memory");
+            if (gst_is_dmabuf_memory(mem.get()))
+                gva_dmabuffer_import(mem.get());
+>>>>>>> 1bdbbc8... Release 2020.4
 #endif
             break;
         }
@@ -165,7 +187,15 @@ void gva_buffer_map(GstBuffer *buffer, Image &image, BufferMapContext &map_conte
 void gva_buffer_unmap(GstBuffer *buffer, Image &, BufferMapContext &map_context) {
     if (map_context.frame.buffer) {
 #if defined(USE_VPUSMM)
+<<<<<<< HEAD
         gva_dmabuffer_unimport(buffer);
+=======
+        auto mem = GstMemoryUniquePtr(gst_buffer_get_memory(buffer, 0), gst_memory_unref);
+        if (not mem.get())
+            throw std::runtime_error("Failed to get GstBuffer memory");
+        if (gst_is_dmabuf_memory(mem.get()))
+            gva_dmabuffer_unimport(mem.get());
+>>>>>>> 1bdbbc8... Release 2020.4
 #else
         UNUSED(buffer);
 #endif

@@ -126,6 +126,7 @@ json convert_roi_detection(GstGvaMetaConvert *converter, GstBuffer *buffer) {
                 double confidence;
                 int label_id;
                 if (gst_structure_get(s, "x_min", G_TYPE_DOUBLE, &xminval, "x_max", G_TYPE_DOUBLE, &xmaxval, "y_min",
+<<<<<<< HEAD
                                       G_TYPE_DOUBLE, &yminval, "y_max", G_TYPE_DOUBLE, &ymaxval, "confidence",
                                       G_TYPE_DOUBLE, &confidence, "label_id", G_TYPE_INT, &label_id, NULL)) {
                     json detection = {
@@ -133,6 +134,20 @@ json convert_roi_detection(GstGvaMetaConvert *converter, GstBuffer *buffer) {
                          {{"x_min", xminval}, {"x_max", xmaxval}, {"y_min", yminval}, {"y_max", ymaxval}}},
                         {"confidence", confidence},
                         {"label_id", label_id}};
+=======
+                                      G_TYPE_DOUBLE, &yminval, "y_max", G_TYPE_DOUBLE, &ymaxval, NULL)) {
+                    json detection = {
+                        {"bounding_box",
+                         {{"x_min", xminval}, {"x_max", xmaxval}, {"y_min", yminval}, {"y_max", ymaxval}}}};
+
+                    if (gst_structure_get(s, "confidence", G_TYPE_DOUBLE, &confidence, NULL)) {
+                        detection.push_back({"confidence", confidence});
+                    }
+
+                    if (gst_structure_get(s, "label_id", G_TYPE_INT, &label_id, NULL)) {
+                        detection.push_back({"label_id", label_id});
+                    }
+>>>>>>> 1bdbbc8... Release 2020.4
 
                     const gchar *label = g_quark_to_string(it->_meta()->roi_type);
 
@@ -206,7 +221,11 @@ gboolean to_json(GstGvaMetaConvert *converter, GstBuffer *buffer) {
             if (!jframe_tensors.empty()) {
                 jframe["tensors"] = jframe_tensors;
             }
+<<<<<<< HEAD
             std::string json_message = jframe.dump();
+=======
+            std::string json_message = jframe.dump(converter->json_indent);
+>>>>>>> 1bdbbc8... Release 2020.4
             GVA::VideoFrame video_frame(buffer, converter->info);
             video_frame.add_message(json_message);
             GST_INFO_OBJECT(converter, "JSON message: %s", json_message.c_str());

@@ -22,6 +22,7 @@ G_END_DECLS
     ((GstVideoRegionOfInterestMeta *)gst_buffer_iterate_meta_filtered(buf, state,                                      \
                                                                       GST_VIDEO_REGION_OF_INTEREST_META_API_TYPE))
 
+<<<<<<< HEAD
 /*******************************************************************************/
 /* C++ */
 
@@ -37,4 +38,6 @@ bool file_exists(const std::string &path);
 
 #endif // __cplusplus
 
+=======
+>>>>>>> 1bdbbc8... Release 2020.4
 #endif // GVA_UTILS_H

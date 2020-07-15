@@ -28,6 +28,7 @@ Image VaApiImageMap::Map(const Image &image) {
 
     va_display = image.va_display;
 
+<<<<<<< HEAD
     VAImageFormat va_format = VAImageFormat();
     if (image.format == VA_FOURCC_RGBP) {
         va_format = {.fourcc = (uint32_t)image.format,
@@ -49,6 +50,9 @@ Image VaApiImageMap::Map(const Image &image) {
     } else {
         VA_CALL(vaDeriveImage(va_display, image.va_surface_id, &va_image))
     }
+=======
+    VA_CALL(vaDeriveImage(va_display, image.va_surface_id, &va_image))
+>>>>>>> 1bdbbc8... Release 2020.4
 
     void *surface_p = nullptr;
     VA_CALL(vaMapBuffer(va_display, va_image.buf, &surface_p))

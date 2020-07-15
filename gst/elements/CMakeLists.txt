@@ -92,6 +92,10 @@ PRIVATE
     logger
     json-hpp
     json-schema-validator
+<<<<<<< HEAD
+=======
+    utils
+>>>>>>> 1bdbbc8... Release 2020.4
 )
 
 if(${HAVE_VAAPI})

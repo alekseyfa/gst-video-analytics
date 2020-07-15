@@ -4,15 +4,27 @@
  * SPDX-License-Identifier: MIT
  ******************************************************************************/
 
+<<<<<<< HEAD
 #include <gst/base/gstbasetransform.h>
 #include <gst/gst.h>
 #include <gst/video/video.h>
 
+=======
+>>>>>>> 1bdbbc8... Release 2020.4
 #include "config.h"
 
 #include "gstgvadetect.h"
 #include "gva_caps.h"
+<<<<<<< HEAD
 #include "post_processors.h"
+=======
+
+#include "detection_post_processors_c.h"
+
+#include <gst/base/gstbasetransform.h>
+#include <gst/gst.h>
+#include <gst/video/video.h>
+>>>>>>> 1bdbbc8... Release 2020.4
 
 #define ELEMENT_LONG_NAME "Object detection (generates GstVideoRegionOfInterestMeta)"
 #define ELEMENT_DESCRIPTION ELEMENT_LONG_NAME
@@ -33,6 +45,12 @@ G_DEFINE_TYPE_WITH_CODE(GstGvaDetect, gst_gva_detect, GST_TYPE_GVA_BASE_INFERENC
                         GST_DEBUG_CATEGORY_INIT(gst_gva_detect_debug_category, "gvadetect", 0,
                                                 "debug category for gvadetect element"));
 
+<<<<<<< HEAD
+=======
+static void gst_gva_detect_finilize(GObject *object);
+static void on_base_inference_initialized(GvaBaseInference *base_inference);
+
+>>>>>>> 1bdbbc8... Release 2020.4
 void gst_gva_detect_set_property(GObject *object, guint property_id, const GValue *value, GParamSpec *pspec) {
     GstGvaDetect *gvadetect = (GstGvaDetect *)(object);
 
@@ -75,8 +93,18 @@ void gst_gva_detect_class_init(GstGvaDetectClass *klass) {
                                           "Intel Corporation");
 
     GObjectClass *gobject_class = G_OBJECT_CLASS(klass);
+<<<<<<< HEAD
     gobject_class->set_property = gst_gva_detect_set_property;
     gobject_class->get_property = gst_gva_detect_get_property;
+=======
+    gobject_class->finalize = gst_gva_detect_finilize;
+    gobject_class->set_property = gst_gva_detect_set_property;
+    gobject_class->get_property = gst_gva_detect_get_property;
+
+    GvaBaseInferenceClass *base_inference_class = GVA_BASE_INFERENCE_CLASS(klass);
+    base_inference_class->on_initialized = on_base_inference_initialized;
+
+>>>>>>> 1bdbbc8... Release 2020.4
     g_object_class_install_property(
         gobject_class, PROP_THRESHOLD,
         g_param_spec_float("threshold", "Threshold",
@@ -91,5 +119,27 @@ void gst_gva_detect_init(GstGvaDetect *gvadetect) {
     GST_DEBUG_OBJECT(gvadetect, "%s", GST_ELEMENT_NAME(GST_ELEMENT(gvadetect)));
 
     gvadetect->threshold = DEFALUT_THRESHOLD;
+<<<<<<< HEAD
     gvadetect->base_inference.post_proc = EXTRACT_DETECTION_RESULTS;
+=======
+}
+
+void gst_gva_detect_finilize(GObject *object) {
+    GstGvaDetect *gvadetect = GST_GVA_DETECT(object);
+
+    GST_DEBUG_OBJECT(gvadetect, "finalize");
+
+    releaseDetectionPostProcessor(gvadetect->base_inference.post_proc);
+    gvadetect->base_inference.post_proc = NULL;
+
+    G_OBJECT_CLASS(gst_gva_detect_parent_class)->finalize(object);
+}
+
+void on_base_inference_initialized(GvaBaseInference *base_inference) {
+    GstGvaDetect *gvadetect = GST_GVA_DETECT(base_inference);
+
+    GST_DEBUG_OBJECT(gvadetect, "on_base_inference_initialized");
+
+    base_inference->post_proc = createDetectionPostProcessor(base_inference->inference);
+>>>>>>> 1bdbbc8... Release 2020.4
 }

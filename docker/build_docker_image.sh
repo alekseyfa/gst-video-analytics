@@ -18,8 +18,18 @@ else
   exit
 fi
 
+<<<<<<< HEAD
 BASEDIR=$(dirname "$0")
 docker build -f ${BASEDIR}/${dockerfile} -t gst-video-analytics:$tag \
     --build-arg http_proxy=${HTTP_PROXY:-$http_proxy} \
     --build-arg https_proxy=${HTTPS_PROXY:-$https_proxy} \
     ${BASEDIR}/..
+=======
+BASEDIR="$(dirname "$(readlink -fm "$0")")"
+CONTEXTDIR="$(dirname "$BASEDIR")"
+
+docker build -f ${BASEDIR}/${dockerfile} -t gst-video-analytics:$tag \
+    --build-arg http_proxy=${HTTP_PROXY} \
+    --build-arg https_proxy=${HTTPS_PROXY} \
+    ${CONTEXTDIR}
+>>>>>>> 1bdbbc8... Release 2020.4

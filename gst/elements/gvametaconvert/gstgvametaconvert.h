@@ -12,6 +12,11 @@
 
 G_BEGIN_DECLS
 
+<<<<<<< HEAD
+=======
+GST_DEBUG_CATEGORY_EXTERN(gst_gva_meta_convert_debug_category);
+
+>>>>>>> 1bdbbc8... Release 2020.4
 #define GST_TYPE_GVA_METACONVERT_FORMAT (gst_gva_metaconvert_get_format())
 #define GST_TYPE_GVA_META_CONVERT (gst_gva_meta_convert_get_type())
 #define GST_GVA_META_CONVERT(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), GST_TYPE_GVA_META_CONVERT, GstGvaMetaConvert))
@@ -40,6 +45,10 @@ struct _GstGvaMetaConvert {
     gboolean signal_handoffs;
     convert_function_type convert_function;
     GstVideoInfo *info;
+<<<<<<< HEAD
+=======
+    gint json_indent;
+>>>>>>> 1bdbbc8... Release 2020.4
 };
 
 struct _GstGvaMetaConvertClass {

@@ -46,6 +46,10 @@ PRIVATE
     ${PYTHON_LIBRARIES}
     ${PYGOBJECT_LIBRARIES}
     common
+<<<<<<< HEAD
+=======
+    utils
+>>>>>>> 1bdbbc8... Release 2020.4
 )
 
 install(TARGETS ${TARGET_NAME} DESTINATION ${DLSTREAMER_PLUGINS_INSTALL_PATH})

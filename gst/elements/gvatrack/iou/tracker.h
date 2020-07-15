@@ -2,6 +2,7 @@
  * Copyright (C) 2018-2020 Intel Corporation
  *
  * SPDX-License-Identifier: MIT
+<<<<<<< HEAD
  *
  * Reidentification gallery implementation based on smart classroom demo
  * See https://github.com/opencv/open_model_zoo/tree/2018/demos/smart_classroom_demo
@@ -9,6 +10,8 @@
  * Store features in separate feature file instead of embedding into images
  * Adapted code style to match with Video Analytics GStreamer* plugins project
  * Fixed warnings
+=======
+>>>>>>> 1bdbbc8... Release 2020.4
  ******************************************************************************/
 
 #pragma once

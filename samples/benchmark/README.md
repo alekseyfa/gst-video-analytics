@@ -1,6 +1,10 @@
 # Benchmark Sample
 
+<<<<<<< HEAD
 This sample demonstrates [gvafpscounter](./gvafpscounter.md) element used to measure overall performance of single-channel or multi-channel video analytics pipelines.
+=======
+This sample demonstrates [gvafpscounter](https://github.com/opencv/gst-video-analytics/wiki/gvafpscounter) element used to measure overall performance of single-channel or multi-channel video analytics pipelines.
+>>>>>>> 1bdbbc8... Release 2020.4
 
 The sample outputs FPS (Frames Per Second) every second and average FPS on exit.
 
